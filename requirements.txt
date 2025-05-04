@@ -1,0 +1,6 @@
+Flask==2.3.2
+requests>=2.25.1
+
+# Optional: for dev
+
+python-dotenv>=1.0.0
