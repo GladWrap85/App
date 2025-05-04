@@ -230,7 +230,7 @@ body {
   background-color: #336fa0;
   color: white;
 }
-.sky-blue-theme .top-bar {
+.sky-blue-theme .top-bar, .sky-blue-theme #connectBtn {
   background-color: #3c7eb2;
 }
 
@@ -239,17 +239,17 @@ body {
   background-color: #20c997;
   color: white;
 }
-.slime-green-theme .top-bar {
+.slime-green-theme .top-bar, .slime-green-theme #connectBtn {
   background-color: #20c997;
 }
 
-.sun-yellow-theme #page2Btn,
-.sun-yellow-theme #homeBtn {
-  background-color: #d1c738;
+.sunset-orange-theme #page2Btn,
+.sunset-orange-theme #homeBtn {
+  background-color: #e4572e;
   color: white;
 }
-.sun-yellow-theme .top-bar {
-  background-color: #d1c738;
+.sunset-orange-theme .top-bar, .sunset-orange-theme #connectBtn {
+  background-color: #e4572e;
 }
 
 .midnight-purple-theme #page2Btn,
@@ -257,7 +257,7 @@ body {
   background-color: #6f42c1;
   color: white;
 }
-.midnight-purple-theme .top-bar {
+.midnight-purple-theme .top-bar, .midnight-purple-theme #connectBtn {
   background-color: #6f42c1;
 }
   
