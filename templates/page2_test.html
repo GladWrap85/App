@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Knowby Page 2</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        var shuttingDown = false;
+        var connecting = false;
+    
+        function shutdownApp() {
+            shuttingDown = true;
+        }
+    
+        function connectApp() {
+            connecting = true;
+        }
+    
+        function markSafeExit() {
+            document.cookie = "safeExit=true; path=/";
+        }
+    
+        window.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden' && !shuttingDown && !connecting) {
+                if (!document.cookie.includes("safeExit=true")) {
+                    navigator.sendBeacon('/shutdown');
+                }
+            }
+        });
+    
+        window.addEventListener('load', function () {
+            // After the page reloads, reset safeExit
+            document.cookie = "safeExit=false; path=/";
+        });
+    </script>             
+</head>
+<body class="{{ theme }}-theme" style="font-family: Arial, sans-serif; padding: 20px;">
+    <h1>Welcome to Page 2!</h1>
+
+    <a href="/">⬅️ Go Back to Home</a>
+    <form action="/" method="get" style="margin-top: 20px;">
+        <button type="submit" id="homeBtn">Back to Home</button>
+    </form>
+    
+    <form method="POST" action="/shutdown" style="margin-top:20px;">
+        <button id="shutdownBtn" type="submit" style="padding: 10px 20px; font-size: 16px;">Shutdown App</button>
+    </form>
+</body>
+</html>

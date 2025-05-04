@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Knowby Dashboard</title>
+    <link rel="stylesheet" href="static/style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="{{ url_for('static', filename='firststepsolutions_logo.png') }}" type="image/png">
+
+    <script>
+        var shuttingDown = false;
+        var connecting = false;
+    
+        function shutdownApp() {
+            shuttingDown = true;
+        }
+    
+        function connectApp() {
+            connecting = true;
+        }
+    
+        function markSafeExit() {
+            document.cookie = "safeExit=true; path=/";
+        }
+    
+        window.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden' && !shuttingDown && !connecting) {
+                if (!document.cookie.includes("safeExit=true")) {
+                    navigator.sendBeacon('/shutdown');
+                }
+            }
+        });
+    
+        window.addEventListener('load', function () {
+            // After the page reloads, reset safeExit
+            document.cookie = "safeExit=false; path=/";
+        });
+    </script>
+
+</head>
+<body class="{{ theme }}-theme">
+    
+    <div class="top-bar">
+        <div class="top-left">
+          <img src="static/firststepsolutions_logo.png" alt="First Step Solutions" class="top-logo">
+          <span class="top-title">Dashboard</span>
+        </div>
+        <div class="status-badge {{ sync_color }}">
+            Last Knowby Sync: {{ last_sync }}
+        </div>
+      </div>
+      
+      <!--<h1 class="date-title">2025, Engagement Summary</h1>-->
+    
+    
+    <div class="grid-container">
+        <div class="date-title">2025, Engagement Summary</div>
+
+      <!-- Monthly Views -->
+        <div class="div1">
+            <div class="card-content">
+                <h3>Monthly Views</h3>
+                <p><strong>1,740</strong> Views</p>
+                <p style="color: green;">↑ 20% from last month</p>
+            </div>
+        </div>
+    
+        <!-- Average Completion Time -->
+        <div class="div2">
+            <div class="card-content">
+                <h3>Average Completion Time</h3>
+                <p><strong>240</strong> seconds</p>
+                <p style="color: red;">↓ 33% from last month</p>
+            </div>
+        </div>
+    
+        <!-- Best/Worst Knowbys Chart -->
+        <div class="div3">
+            <div class="card-content">
+                <h3>Top and Bottom Performing Knowbys</h3>
+                <p>[Bar Chart Placeholder]
+                    <img src="static/barplotdiv1.jpg" alt="Bar Chart" style="width: 100%; height: auto;">
+                </p>
+            </div>
+        </div>
+    
+        <!-- Engagement by Department -->
+        <div class="div4">
+            <div class="card-content">
+                <h3>Department Engagement</h3>
+                <p>[Department Chart Placeholder]
+                    <center><img src="static/histogramdiv4.jpg" alt="Department Chart" style="width: 80%; height: auto;"></center>
+                </p>
+            </div>
+        </div>
+    
+        <!-- Button Panel -->
+        <div class="div5">
+            <div class="card-content">
+                <form method="POST" onsubmit="connectApp();">
+                    <input type="hidden" name="action" value="connect">
+                    <button class="btn" id="connectBtn" type="submit">Connect to Knowby</button>
+            </form>
+    
+            <button class="btn outlined" id="exportBtn" onclick="printPage()">Export</button>
+    
+            <form method="POST" onsubmit="markSafeExit();">
+                <label for="themeSelector">Choose Theme:</label>
+                <select id="themeselector" name="themeSelector" onchange="this.form.submit()">
+                <option value="sky-blue" {% if theme == 'sky-blue' %}selected{% endif %}>Sky Blue</option>
+                <option value="slime-green" {% if theme == 'slime-green' %}selected{% endif %}>Slime Green</option>
+                <option value="sun-yellow" {% if theme == 'sun-yellow' %}selected{% endif %}>Sun Yellow</option>
+                <option value="midnight-purple" {% if theme == 'midnight-purple' %}selected{% endif %}>Midnight Purple</option>
+                </select>
+                <input type="hidden" name="action" value="set_theme">
+            </form>
+    
+            <form method="POST" onsubmit="shutdownApp();">
+                <input type="hidden" name="action" value="shutdown">
+                <button class="btn outlined" id="shutdownBtn" type="submit">Shutdown App</button>
+            </form>
+    
+            <!--<form action="/page2" method="get">
+                <button class="btn outlined" type="submit" id="page2Btn">Go to Page 2</button>
+            </form>-->
+    
+            {% if status %}
+                <p>{{ status }}</p>
+            {% endif %}
+            </div>
+        </div>
+    
+        <!-- Heatmap -->
+        <div class="div6">
+            <div class="card-content">
+                <h3>Usage Heatmap</h3>
+                <p>[Heatmap Placeholder]
+                    <img src="static/heatmapdiv6.jpg" alt="Heatmap" style="width: 80%; height: auto;">
+                </p>
+            </div>
+        </div>
+    </div>
+  
+    <script>
+        function printPage() {
+            window.print();
+    }
+
+    function hideOverlay() {
+        const overlay = document.getElementById('loginOverlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+    }
+
+    function showLoading() {
+        const loginBox = document.getElementById('loginBox');
+        const loadingBox = document.getElementById('loadingBox');
+        if (loginBox && loadingBox) {
+            loginBox.style.display = 'none';
+            loadingBox.style.display = 'flex';
+        }
+    }
+    </script>
+        
+        
+
+
+        {% if sync_color in ['yellow', 'red', 'gray'] %}
+        <div id="loginOverlay" class="overlay">
+            <div class="overlay-box" id="loginBox">
+                <img src="static/ffs_logo_full.png" alt="First Step Solutions" class="overlay-logo">
+                <h2>Please login to your Knowby account</h2>
+                <form method="POST" onsubmit="showLoading();">
+                    <input type="hidden" name="action" value="connect">
+                    <center><button type="submit" class="btn" id="overlayConnectBtn">Connect to Knowby</button></center>
+                </form>
+            </div>
+
+            <div class="overlay-box" id="loadingBox" style="display:none;">
+                <div class="spinner"></div>
+                <p style="margin-top: 16px;">Connecting to Knowby...<br>Please wait.</p>
+            </div>
+        </div>
+        {% endif %}
+
+
+
+    </body>
+  
+</html>
